@@ -24,15 +24,18 @@ var isString = function (d) { return Object.prototype.toString.call(d) === '[obj
 var isObject = function (d) { return Object.prototype.toString.call(d) === '[object Object]'; };
 var ApolloError = /** @class */ (function (_super) {
     __extends(ApolloError, _super);
-    function ApolloError(name, config) {
-        var _this = _super.call(this, (arguments[2] && arguments[2].message) || '') || this;
+    function ApolloError(name, config, newConfig) {
+        var _this = _super.call(this, (newConfig && newConfig.message) || (config && config.message) || '') || this;
         _this._showLocations = false;
         _this._showPath = false;
-        var t = (arguments[2] && arguments[2].time_thrown) || (new Date()).toISOString();
-        var m = (arguments[2] && arguments[2].message) || '';
-        var configData = (arguments[2] && arguments[2].data) || {};
-        var d = __assign({}, _this.data, configData);
-        var opts = ((arguments[2] && arguments[2].options) || {});
+        var t = (newConfig && newConfig.time_thrown) || (config && config.time_thrown) || (new Date()).toISOString();
+        var m = (newConfig && newConfig.message) || (config && config.message) || '';
+        var newConfigData = (newConfig && newConfig.data) || {};
+        var configData = (config && config.data) || {};
+        var d = __assign({}, _this.data, configData, newConfigData);
+        var newConfigOptions = (newConfig && newConfig.options) || {};
+        var configOptions = (config && config.options) || {};
+        var opts = __assign({}, configOptions, newConfigOptions);
         _this.name = name;
         _this.message = m;
         _this.time_thrown = t;
@@ -45,11 +48,13 @@ var ApolloError = /** @class */ (function (_super) {
         var _a = this, name = _a.name, message = _a.message, time_thrown = _a.time_thrown, data = _a.data, _showLocations = _a._showLocations, _showPath = _a._showPath, path = _a.path, locations = _a.locations;
         var error = {
             message: message,
-            name: name,
-            time_thrown: time_thrown,
-            data: data,
             path: path,
-            locations: locations
+            locations: locations,
+            extensions: {
+                name: name,
+                time_thrown: time_thrown,
+                data: data
+            }
         };
         if (_showLocations) {
             error.locations = locations;

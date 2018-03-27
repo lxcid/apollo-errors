@@ -1,4 +1,10 @@
 
+1.8.0 / 2018-03-27
+==================
+
+  * Fix: unused config (@lxcid)
+  * Feature: (BREAKING) Compliant to GraphQL spec (@lxcid)
+
 1.7.1 / 2018-02-22
 ==================
 
